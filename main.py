@@ -9,8 +9,8 @@ from mac_vendor_lookup import MacLookup, VendorNotFoundError
 
 
 parser = argparse.ArgumentParser(description='DNS Sniffer')
-#parser.add_argument('--targetip', help='Target device you want to watch', required=True)
-parser.add_argument('--network',help='Network to scan (eg. "192.168.0.0/24)', required=True)
+parser.add_argument('--targetip', help='Target device you want to watch')
+parser.add_argument('--network',help='Network to scan (eg. "192.168.0.0/24)')
 parser.add_argument('--iface', help='Interface to use for attack', required=True)
 parser.add_argument('--routerip',help='My home router gateway ip',required=True)
 opts = parser.parse_args()
@@ -77,6 +77,9 @@ class Device:
 
 
 if __name__ == '__main__':
-    targetip = arp_scan(opts.network,opts.iface)
+    if not opts.targetip:
+        targetip = arp_scan(opts.network,opts.iface)
+    else:
+        targetip = opts.targetip
     device = Device(opts.routerip, targetip, opts.iface)
     device.watch()
